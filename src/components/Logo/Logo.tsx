@@ -5,25 +5,25 @@ interface Props {
   className?: string
   loading?: 'lazy' | 'eager'
   priority?: 'auto' | 'high' | 'low'
+  /** 'dark' for use on light backgrounds, 'light' for use on dark backgrounds */
+  variant?: 'dark' | 'light'
 }
 
+/**
+ * Logo officiel ENGIP-RDC — image transparente `public/logo-officiel.png`.
+ * Le fond transparent permet d'utiliser le logo tel quel aussi bien sur
+ * fond clair (header) que sur fond sombre (footer).
+ */
 export const Logo = (props: Props) => {
-  const { loading: loadingFromProps, priority: priorityFromProps, className } = props
-
-  const loading = loadingFromProps || 'lazy'
-  const priority = priorityFromProps || 'low'
-
+  const { className, loading = 'eager', priority = 'high' } = props
   return (
-    /* eslint-disable @next/next/no-img-element */
+    // eslint-disable-next-line @next/next/no-img-element
     <img
-      alt="Payload Logo"
-      width={193}
-      height={34}
+      src="/logo-officiel.png"
+      alt="ENGIP-RDC — Logo officiel"
       loading={loading}
       fetchPriority={priority}
-      decoding="async"
-      className={clsx('max-w-[9.375rem] w-full h-[34px]', className)}
-      src="https://raw.githubusercontent.com/payloadcms/payload/main/packages/ui/src/assets/payload-logo-light.svg"
+      className={clsx('h-12 w-auto select-none', className)}
     />
   )
 }

@@ -9,8 +9,21 @@ import { Media } from './collections/Media'
 import { Pages } from './collections/Pages'
 import { Posts } from './collections/Posts'
 import { Users } from './collections/Users'
+import {
+  Actualites,
+  Dirigeants,
+  Infrastructures,
+  Projets,
+  Publications,
+  AppelsOffres,
+  OffresEmploi,
+  Candidatures,
+  MessagesContact,
+} from './collections/institutional'
 import { Footer } from './Footer/config'
 import { Header } from './Header/config'
+import { Parametres } from './globals/Parametres'
+import { Accueil } from './globals/Accueil'
 import { plugins } from './plugins'
 import { defaultLexical } from '@/fields/defaultLexical'
 import { getServerSideURL } from './utilities/getURL'
@@ -62,9 +75,35 @@ export default buildConfig({
       connectionString: process.env.DATABASE_URL || '',
     },
   }),
-  collections: [Pages, Posts, Media, Categories, Users],
+  collections: [
+    Pages,
+    Posts,
+    Media,
+    Categories,
+    Users,
+    // Institutionnel
+    Actualites,
+    Dirigeants,
+    Infrastructures,
+    Projets,
+    Publications,
+    AppelsOffres,
+    OffresEmploi,
+    // Soumissions publiques
+    Candidatures,
+    MessagesContact,
+  ],
+  localization: {
+    locales: [
+      { label: 'Français', code: 'fr' },
+      { label: 'English', code: 'en' },
+      { label: 'العربية', code: 'ar', rtl: true },
+    ],
+    defaultLocale: 'fr',
+    fallback: true,
+  },
   cors: [getServerSideURL()].filter(Boolean),
-  globals: [Header, Footer],
+  globals: [Header, Footer, Parametres, Accueil],
   plugins,
   secret: process.env.PAYLOAD_SECRET,
   sharp,

@@ -1,5 +1,6 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
+@import 'maplibre-gl/dist/maplibre-gl.css';
 
 @config '../../../tailwind.config.mjs';
 
@@ -19,6 +20,11 @@
   h6 {
     font-weight: unset;
     font-size: unset;
+    font-family: var(--font-serif);
+    letter-spacing: -0.01em;
+  }
+  body {
+    font-family: var(--font-sans);
   }
 }
 
@@ -43,8 +49,8 @@
   --breakpoint-lg: 64rem;
   --breakpoint-xl: 80rem;
   --breakpoint-2xl: 86rem;
-  --font-mono: var(--font-geist-mono);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-serif), ui-serif, Georgia, serif;
 }
 
 @layer utilities {
@@ -87,25 +93,28 @@
 }
 
 :root {
+  /* ENGIP institutional palette — white background, blue primary, red secondary */
   --background: oklch(100% 0 0deg);
-  --foreground: oklch(14.5% 0 0deg);
-  --card: oklch(96.5% 0.005 265deg);
-  --card-foreground: oklch(14.5% 0 0deg);
+  --foreground: oklch(18% 0.01 260deg);
+  --card: oklch(98% 0.005 260deg);
+  --card-foreground: oklch(18% 0.01 260deg);
   --popover: oklch(100% 0 0deg);
-  --popover-foreground: oklch(14.5% 0 0deg);
-  --primary: oklch(20.5% 0 0deg);
-  --primary-foreground: oklch(98.5% 0 0deg);
-  --secondary: oklch(97% 0 0deg);
-  --secondary-foreground: oklch(20.5% 0 0deg);
-  --muted: oklch(97% 0 0deg);
-  --muted-foreground: oklch(55.6% 0 0deg);
-  --accent: oklch(97% 0 0deg);
-  --accent-foreground: oklch(20.5% 0 0deg);
-  --destructive: oklch(57.7% 0.245 27.325deg);
-  --destructive-foreground: oklch(57.7% 0.245 27.325deg);
-  --border: oklch(92.2% 0 0deg);
-  --input: oklch(92.2% 0 0deg);
-  --ring: oklch(70.8% 0 0deg);
+  --popover-foreground: oklch(18% 0.01 260deg);
+  /* Primary = institutional blue (#0A3D91) */
+  --primary: oklch(34% 0.16 263deg);
+  --primary-foreground: oklch(100% 0 0deg);
+  /* Secondary = institutional red (#C8102E) */
+  --secondary: oklch(50% 0.21 27deg);
+  --secondary-foreground: oklch(100% 0 0deg);
+  --muted: oklch(96.5% 0.005 260deg);
+  --muted-foreground: oklch(45% 0.01 260deg);
+  --accent: oklch(50% 0.21 27deg);
+  --accent-foreground: oklch(100% 0 0deg);
+  --destructive: oklch(50% 0.21 27deg);
+  --destructive-foreground: oklch(100% 0 0deg);
+  --border: oklch(92% 0.005 260deg);
+  --input: oklch(92% 0.005 260deg);
+  --ring: oklch(34% 0.16 263deg);
   --chart-1: oklch(64.6% 0.222 41.116deg);
   --chart-2: oklch(60% 0.118 184.704deg);
   --chart-3: oklch(39.8% 0.07 227.392deg);
@@ -125,7 +134,8 @@
   --error: oklch(75% 0.15 25deg);
 }
 
-[data-theme='dark'] {
+/* Dark mode disabled site-wide. Kept block inert to preserve tooling defaults. */
+[data-theme='dark-disabled-do-not-use'] {
   --background: oklch(14.5% 0 0deg);
   --foreground: oklch(98.5% 0 0deg);
   --card: oklch(17% 0 0deg);

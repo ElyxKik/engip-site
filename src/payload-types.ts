@@ -72,6 +72,15 @@ export interface Config {
     media: Media;
     categories: Category;
     users: User;
+    actualites: Actualite;
+    dirigeants: Dirigeant;
+    infrastructures: Infrastructure;
+    projets: Projet;
+    publications: Publication;
+    'appels-offres': AppelsOffre;
+    'offres-emploi': OffresEmploi;
+    'candidatures-spontanees': CandidaturesSpontanee;
+    'messages-contact': MessagesContact;
     redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -94,6 +103,15 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
+    actualites: ActualitesSelect<false> | ActualitesSelect<true>;
+    dirigeants: DirigeantsSelect<false> | DirigeantsSelect<true>;
+    infrastructures: InfrastructuresSelect<false> | InfrastructuresSelect<true>;
+    projets: ProjetsSelect<false> | ProjetsSelect<true>;
+    publications: PublicationsSelect<false> | PublicationsSelect<true>;
+    'appels-offres': AppelsOffresSelect<false> | AppelsOffresSelect<true>;
+    'offres-emploi': OffresEmploiSelect<false> | OffresEmploiSelect<true>;
+    'candidatures-spontanees': CandidaturesSpontaneesSelect<false> | CandidaturesSpontaneesSelect<true>;
+    'messages-contact': MessagesContactSelect<false> | MessagesContactSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -106,18 +124,22 @@ export interface Config {
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
   };
   db: {
-    defaultIDType: string;
+    defaultIDType: number;
   };
-  fallbackLocale: null;
+  fallbackLocale: ('false' | 'none' | 'null') | false | null | ('fr' | 'en' | 'ar') | ('fr' | 'en' | 'ar')[];
   globals: {
     header: Header;
     footer: Footer;
+    parametres: Parametre;
+    accueil: Accueil;
   };
   globalsSelect: {
     header: HeaderSelect<false> | HeaderSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
+    parametres: ParametresSelect<false> | ParametresSelect<true>;
+    accueil: AccueilSelect<false> | AccueilSelect<true>;
   };
-  locale: null;
+  locale: 'fr' | 'en' | 'ar';
   widgets: {
     collections: CollectionsWidget;
   };
@@ -156,7 +178,7 @@ export interface UserAuthOperations {
  * via the `definition` "pages".
  */
 export interface Page {
-  id: string;
+  id: number;
   title: string;
   hero: {
     type: 'none' | 'highImpact' | 'mediumImpact' | 'lowImpact';
@@ -183,11 +205,11 @@ export interface Page {
             reference?:
               | ({
                   relationTo: 'pages';
-                  value: string | Page;
+                  value: number | Page;
                 } | null)
               | ({
                   relationTo: 'posts';
-                  value: string | Post;
+                  value: number | Post;
                 } | null);
             url?: string | null;
             label: string;
@@ -199,7 +221,7 @@ export interface Page {
           id?: string | null;
         }[]
       | null;
-    media?: (string | null) | Media;
+    media?: (number | null) | Media;
   };
   layout: (CallToActionBlock | ContentBlock | MediaBlock | ArchiveBlock | FormBlock)[];
   meta?: {
@@ -207,7 +229,7 @@ export interface Page {
     /**
      * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
      */
-    image?: (string | null) | Media;
+    image?: (number | null) | Media;
     description?: string | null;
   };
   publishedAt?: string | null;
@@ -225,9 +247,9 @@ export interface Page {
  * via the `definition` "posts".
  */
 export interface Post {
-  id: string;
+  id: number;
   title: string;
-  heroImage?: (string | null) | Media;
+  heroImage?: (number | null) | Media;
   content: {
     root: {
       type: string;
@@ -243,18 +265,18 @@ export interface Post {
     };
     [k: string]: unknown;
   };
-  relatedPosts?: (string | Post)[] | null;
-  categories?: (string | Category)[] | null;
+  relatedPosts?: (number | Post)[] | null;
+  categories?: (number | Category)[] | null;
   meta?: {
     title?: string | null;
     /**
      * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
      */
-    image?: (string | null) | Media;
+    image?: (number | null) | Media;
     description?: string | null;
   };
   publishedAt?: string | null;
-  authors?: (string | User)[] | null;
+  authors?: (number | User)[] | null;
   populatedAuthors?:
     | {
         id?: string | null;
@@ -275,7 +297,7 @@ export interface Post {
  * via the `definition` "media".
  */
 export interface Media {
-  id: string;
+  id: number;
   alt?: string | null;
   caption?: {
     root: {
@@ -292,7 +314,7 @@ export interface Media {
     };
     [k: string]: unknown;
   } | null;
-  folder?: (string | null) | FolderInterface;
+  folder?: (number | null) | FolderInterface;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -368,18 +390,18 @@ export interface Media {
  * via the `definition` "payload-folders".
  */
 export interface FolderInterface {
-  id: string;
+  id: number;
   name: string;
-  folder?: (string | null) | FolderInterface;
+  folder?: (number | null) | FolderInterface;
   documentsAndFolders?: {
     docs?: (
       | {
           relationTo?: 'payload-folders';
-          value: string | FolderInterface;
+          value: number | FolderInterface;
         }
       | {
           relationTo?: 'media';
-          value: string | Media;
+          value: number | Media;
         }
     )[];
     hasNextPage?: boolean;
@@ -394,17 +416,17 @@ export interface FolderInterface {
  * via the `definition` "categories".
  */
 export interface Category {
-  id: string;
+  id: number;
   title: string;
   /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
    */
   generateSlug?: boolean | null;
   slug: string;
-  parent?: (string | null) | Category;
+  parent?: (number | null) | Category;
   breadcrumbs?:
     | {
-        doc?: (string | null) | Category;
+        doc?: (number | null) | Category;
         url?: string | null;
         label?: string | null;
         id?: string | null;
@@ -418,7 +440,7 @@ export interface Category {
  * via the `definition` "users".
  */
 export interface User {
-  id: string;
+  id: number;
   name?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -467,11 +489,11 @@ export interface CallToActionBlock {
           reference?:
             | ({
                 relationTo: 'pages';
-                value: string | Page;
+                value: number | Page;
               } | null)
             | ({
                 relationTo: 'posts';
-                value: string | Post;
+                value: number | Post;
               } | null);
           url?: string | null;
           label: string;
@@ -517,11 +539,11 @@ export interface ContentBlock {
           reference?:
             | ({
                 relationTo: 'pages';
-                value: string | Page;
+                value: number | Page;
               } | null)
             | ({
                 relationTo: 'posts';
-                value: string | Post;
+                value: number | Post;
               } | null);
           url?: string | null;
           label: string;
@@ -542,7 +564,7 @@ export interface ContentBlock {
  * via the `definition` "MediaBlock".
  */
 export interface MediaBlock {
-  media: string | Media;
+  media: number | Media;
   id?: string | null;
   blockName?: string | null;
   blockType: 'mediaBlock';
@@ -569,12 +591,12 @@ export interface ArchiveBlock {
   } | null;
   populateBy?: ('collection' | 'selection') | null;
   relationTo?: 'posts' | null;
-  categories?: (string | Category)[] | null;
+  categories?: (number | Category)[] | null;
   limit?: number | null;
   selectedDocs?:
     | {
         relationTo: 'posts';
-        value: string | Post;
+        value: number | Post;
       }[]
     | null;
   id?: string | null;
@@ -586,7 +608,7 @@ export interface ArchiveBlock {
  * via the `definition` "FormBlock".
  */
 export interface FormBlock {
-  form: string | Form;
+  form: number | Form;
   enableIntro?: boolean | null;
   introContent?: {
     root: {
@@ -612,7 +634,7 @@ export interface FormBlock {
  * via the `definition` "forms".
  */
 export interface Form {
-  id: string;
+  id: number;
   title: string;
   fields?:
     | (
@@ -783,10 +805,402 @@ export interface Form {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "actualites".
+ */
+export interface Actualite {
+  id: number;
+  title: string;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  category: 'actualite' | 'communique' | 'rapport' | 'evenement';
+  /**
+   * Résumé affiché sur les cartes (1–2 phrases).
+   */
+  excerpt: string;
+  /**
+   * Image de couverture (ratio 16:9 recommandé).
+   */
+  cover?: (number | null) | Media;
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * Mettre en vedette sur l’accueil.
+   */
+  featured?: boolean | null;
+  status: 'draft' | 'published' | 'archived';
+  publishedAt?: string | null;
+  seo?: {
+    /**
+     * Titre SEO (≤ 60 caractères recommandés).
+     */
+    title?: string | null;
+    /**
+     * Description SEO (≤ 160 caractères recommandés).
+     */
+    description?: string | null;
+    image?: (number | null) | Media;
+  };
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "dirigeants".
+ */
+export interface Dirigeant {
+  id: number;
+  name: string;
+  role: string;
+  board: 'direction' | 'conseil';
+  portrait?: (number | null) | Media;
+  biography?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  linkedinUrl?: string | null;
+  email?: string | null;
+  /**
+   * Ordre d’affichage (plus petit = en premier).
+   */
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "infrastructures".
+ */
+export interface Infrastructure {
+  id: number;
+  name: string;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  type: 'pipeline' | 'stockage' | 'installation';
+  region?: string | null;
+  /**
+   * Courte description (1 phrase).
+   */
+  description?: string | null;
+  coordinates?: {
+    /**
+     * Position X sur la carte (0–100).
+     */
+    x?: number | null;
+    /**
+     * Position Y sur la carte (0–100).
+     */
+    y?: number | null;
+  };
+  details?: {
+    capacity?: string | null;
+    length?: string | null;
+    commissioning?: string | null;
+  };
+  image?: (number | null) | Media;
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  active?: boolean | null;
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "projets".
+ */
+export interface Projet {
+  id: number;
+  title: string;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  projectStatus: 'en-cours' | 'futur' | 'livre';
+  summary: string;
+  location?: string | null;
+  /**
+   * Ex. "2024 — 2027".
+   */
+  period?: string | null;
+  /**
+   * Ex. "180 M$".
+   */
+  budget?: string | null;
+  cover?: (number | null) | Media;
+  impact?:
+    | {
+        label: string;
+        value: string;
+        id?: string | null;
+      }[]
+    | null;
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  gallery?:
+    | {
+        media: number | Media;
+        mediaType?: ('photo' | 'video') | null;
+        caption?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  status: 'draft' | 'published' | 'archived';
+  publishedAt?: string | null;
+  seo?: {
+    /**
+     * Titre SEO (≤ 60 caractères recommandés).
+     */
+    title?: string | null;
+    /**
+     * Description SEO (≤ 160 caractères recommandés).
+     */
+    description?: string | null;
+    image?: (number | null) | Media;
+  };
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "publications".
+ */
+export interface Publication {
+  id: number;
+  title: string;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  type: 'rapport' | 'communique' | 'etude' | 'statistiques';
+  summary: string;
+  file?: (number | null) | Media;
+  /**
+   * Nombre de pages du document.
+   */
+  pages?: number | null;
+  publishedAt: string;
+  downloadCount?: number | null;
+  seo?: {
+    /**
+     * Titre SEO (≤ 60 caractères recommandés).
+     */
+    title?: string | null;
+    /**
+     * Description SEO (≤ 160 caractères recommandés).
+     */
+    description?: string | null;
+    image?: (number | null) | Media;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "appels-offres".
+ */
+export interface AppelsOffre {
+  id: number;
+  /**
+   * Ex. "AO-2026-014".
+   */
+  reference: string;
+  title: string;
+  description: string;
+  tenderStatus: 'ouvert' | 'clos' | 'attribue';
+  category: 'travaux' | 'fournitures' | 'services' | 'etudes';
+  /**
+   * Date limite de dépôt des candidatures.
+   */
+  deadline: string;
+  /**
+   * Ex. "18 — 22 M$".
+   */
+  estimatedAmount?: string | null;
+  documents?:
+    | {
+        title: string;
+        file: number | Media;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Nom de l’attributaire (si applicable).
+   */
+  awardedTo?: string | null;
+  awardedAt?: string | null;
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * Marché restreint — visible uniquement depuis l’espace fournisseurs.
+   */
+  restricted?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "offres-emploi".
+ */
+export interface OffresEmploi {
+  id: number;
+  title: string;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  jobType: 'emploi' | 'stage';
+  contract: 'cdi' | 'cdd' | 'stage' | 'alternance';
+  department: string;
+  location: string;
+  summary: string;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  deadline?: string | null;
+  active?: boolean | null;
+  seo?: {
+    /**
+     * Titre SEO (≤ 60 caractères recommandés).
+     */
+    title?: string | null;
+    /**
+     * Description SEO (≤ 160 caractères recommandés).
+     */
+    description?: string | null;
+    image?: (number | null) | Media;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "candidatures-spontanees".
+ */
+export interface CandidaturesSpontanee {
+  id: number;
+  lastName: string;
+  firstName: string;
+  email: string;
+  phone?: string | null;
+  department: string;
+  message?: string | null;
+  cv: number | Media;
+  consent: boolean;
+  status?: ('nouveau' | 'en-examen' | 'retenue' | 'non-retenue') | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "messages-contact".
+ */
+export interface MessagesContact {
+  id: number;
+  lastName: string;
+  firstName: string;
+  organization?: string | null;
+  role?: string | null;
+  email: string;
+  phone?: string | null;
+  subject: string;
+  message: string;
+  consent: boolean;
+  status?: ('nouveau' | 'traite' | 'archive') | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
-  id: string;
+  id: number;
   /**
    * You will need to rebuild the website when changing this field.
    */
@@ -796,11 +1210,11 @@ export interface Redirect {
     reference?:
       | ({
           relationTo: 'pages';
-          value: string | Page;
+          value: number | Page;
         } | null)
       | ({
           relationTo: 'posts';
-          value: string | Post;
+          value: number | Post;
         } | null);
     url?: string | null;
   };
@@ -812,8 +1226,8 @@ export interface Redirect {
  * via the `definition` "form-submissions".
  */
 export interface FormSubmission {
-  id: string;
-  form: string | Form;
+  id: number;
+  form: number | Form;
   submissionData?:
     | {
         field: string;
@@ -831,18 +1245,18 @@ export interface FormSubmission {
  * via the `definition` "search".
  */
 export interface Search {
-  id: string;
+  id: number;
   title?: string | null;
   priority?: number | null;
   doc: {
     relationTo: 'posts';
-    value: string | Post;
+    value: number | Post;
   };
   slug?: string | null;
   meta?: {
     title?: string | null;
     description?: string | null;
-    image?: (string | null) | Media;
+    image?: (number | null) | Media;
   };
   categories?:
     | {
@@ -860,7 +1274,7 @@ export interface Search {
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
-  id: string;
+  id: number;
   key: string;
   data:
     | {
@@ -877,7 +1291,7 @@ export interface PayloadKv {
  * via the `definition` "payload-jobs".
  */
 export interface PayloadJob {
-  id: string;
+  id: number;
   /**
    * Input data provided to the job
    */
@@ -969,52 +1383,88 @@ export interface PayloadJob {
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
-  id: string;
+  id: number;
   document?:
     | ({
         relationTo: 'pages';
-        value: string | Page;
+        value: number | Page;
       } | null)
     | ({
         relationTo: 'posts';
-        value: string | Post;
+        value: number | Post;
       } | null)
     | ({
         relationTo: 'media';
-        value: string | Media;
+        value: number | Media;
       } | null)
     | ({
         relationTo: 'categories';
-        value: string | Category;
+        value: number | Category;
       } | null)
     | ({
         relationTo: 'users';
-        value: string | User;
+        value: number | User;
+      } | null)
+    | ({
+        relationTo: 'actualites';
+        value: number | Actualite;
+      } | null)
+    | ({
+        relationTo: 'dirigeants';
+        value: number | Dirigeant;
+      } | null)
+    | ({
+        relationTo: 'infrastructures';
+        value: number | Infrastructure;
+      } | null)
+    | ({
+        relationTo: 'projets';
+        value: number | Projet;
+      } | null)
+    | ({
+        relationTo: 'publications';
+        value: number | Publication;
+      } | null)
+    | ({
+        relationTo: 'appels-offres';
+        value: number | AppelsOffre;
+      } | null)
+    | ({
+        relationTo: 'offres-emploi';
+        value: number | OffresEmploi;
+      } | null)
+    | ({
+        relationTo: 'candidatures-spontanees';
+        value: number | CandidaturesSpontanee;
+      } | null)
+    | ({
+        relationTo: 'messages-contact';
+        value: number | MessagesContact;
       } | null)
     | ({
         relationTo: 'redirects';
-        value: string | Redirect;
+        value: number | Redirect;
       } | null)
     | ({
         relationTo: 'forms';
-        value: string | Form;
+        value: number | Form;
       } | null)
     | ({
         relationTo: 'form-submissions';
-        value: string | FormSubmission;
+        value: number | FormSubmission;
       } | null)
     | ({
         relationTo: 'search';
-        value: string | Search;
+        value: number | Search;
       } | null)
     | ({
         relationTo: 'payload-folders';
-        value: string | FolderInterface;
+        value: number | FolderInterface;
       } | null);
   globalSlug?: string | null;
   user: {
     relationTo: 'users';
-    value: string | User;
+    value: number | User;
   };
   updatedAt: string;
   createdAt: string;
@@ -1024,10 +1474,10 @@ export interface PayloadLockedDocument {
  * via the `definition` "payload-preferences".
  */
 export interface PayloadPreference {
-  id: string;
+  id: number;
   user: {
     relationTo: 'users';
-    value: string | User;
+    value: number | User;
   };
   key?: string | null;
   value?:
@@ -1047,7 +1497,7 @@ export interface PayloadPreference {
  * via the `definition` "payload-migrations".
  */
 export interface PayloadMigration {
-  id: string;
+  id: number;
   name?: string | null;
   batch?: number | null;
   updatedAt: string;
@@ -1358,6 +1808,233 @@ export interface UsersSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "actualites_select".
+ */
+export interface ActualitesSelect<T extends boolean = true> {
+  title?: T;
+  generateSlug?: T;
+  slug?: T;
+  category?: T;
+  excerpt?: T;
+  cover?: T;
+  content?: T;
+  featured?: T;
+  status?: T;
+  publishedAt?: T;
+  seo?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "dirigeants_select".
+ */
+export interface DirigeantsSelect<T extends boolean = true> {
+  name?: T;
+  role?: T;
+  board?: T;
+  portrait?: T;
+  biography?: T;
+  linkedinUrl?: T;
+  email?: T;
+  order?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "infrastructures_select".
+ */
+export interface InfrastructuresSelect<T extends boolean = true> {
+  name?: T;
+  generateSlug?: T;
+  slug?: T;
+  type?: T;
+  region?: T;
+  description?: T;
+  coordinates?:
+    | T
+    | {
+        x?: T;
+        y?: T;
+      };
+  details?:
+    | T
+    | {
+        capacity?: T;
+        length?: T;
+        commissioning?: T;
+      };
+  image?: T;
+  content?: T;
+  active?: T;
+  order?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "projets_select".
+ */
+export interface ProjetsSelect<T extends boolean = true> {
+  title?: T;
+  generateSlug?: T;
+  slug?: T;
+  projectStatus?: T;
+  summary?: T;
+  location?: T;
+  period?: T;
+  budget?: T;
+  cover?: T;
+  impact?:
+    | T
+    | {
+        label?: T;
+        value?: T;
+        id?: T;
+      };
+  content?: T;
+  gallery?:
+    | T
+    | {
+        media?: T;
+        mediaType?: T;
+        caption?: T;
+        id?: T;
+      };
+  status?: T;
+  publishedAt?: T;
+  seo?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "publications_select".
+ */
+export interface PublicationsSelect<T extends boolean = true> {
+  title?: T;
+  generateSlug?: T;
+  slug?: T;
+  type?: T;
+  summary?: T;
+  file?: T;
+  pages?: T;
+  publishedAt?: T;
+  downloadCount?: T;
+  seo?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "appels-offres_select".
+ */
+export interface AppelsOffresSelect<T extends boolean = true> {
+  reference?: T;
+  title?: T;
+  description?: T;
+  tenderStatus?: T;
+  category?: T;
+  deadline?: T;
+  estimatedAmount?: T;
+  documents?:
+    | T
+    | {
+        title?: T;
+        file?: T;
+        id?: T;
+      };
+  awardedTo?: T;
+  awardedAt?: T;
+  content?: T;
+  restricted?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "offres-emploi_select".
+ */
+export interface OffresEmploiSelect<T extends boolean = true> {
+  title?: T;
+  generateSlug?: T;
+  slug?: T;
+  jobType?: T;
+  contract?: T;
+  department?: T;
+  location?: T;
+  summary?: T;
+  description?: T;
+  deadline?: T;
+  active?: T;
+  seo?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "candidatures-spontanees_select".
+ */
+export interface CandidaturesSpontaneesSelect<T extends boolean = true> {
+  lastName?: T;
+  firstName?: T;
+  email?: T;
+  phone?: T;
+  department?: T;
+  message?: T;
+  cv?: T;
+  consent?: T;
+  status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "messages-contact_select".
+ */
+export interface MessagesContactSelect<T extends boolean = true> {
+  lastName?: T;
+  firstName?: T;
+  organization?: T;
+  role?: T;
+  email?: T;
+  phone?: T;
+  subject?: T;
+  message?: T;
+  consent?: T;
+  status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects_select".
  */
 export interface RedirectsSelect<T extends boolean = true> {
@@ -1636,7 +2313,7 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
  * via the `definition` "header".
  */
 export interface Header {
-  id: string;
+  id: number;
   navItems?:
     | {
         link: {
@@ -1645,11 +2322,11 @@ export interface Header {
           reference?:
             | ({
                 relationTo: 'pages';
-                value: string | Page;
+                value: number | Page;
               } | null)
             | ({
                 relationTo: 'posts';
-                value: string | Post;
+                value: number | Post;
               } | null);
           url?: string | null;
           label: string;
@@ -1665,7 +2342,7 @@ export interface Header {
  * via the `definition` "footer".
  */
 export interface Footer {
-  id: string;
+  id: number;
   navItems?:
     | {
         link: {
@@ -1674,15 +2351,98 @@ export interface Footer {
           reference?:
             | ({
                 relationTo: 'pages';
-                value: string | Page;
+                value: number | Page;
               } | null)
             | ({
                 relationTo: 'posts';
-                value: string | Post;
+                value: number | Post;
               } | null);
           url?: string | null;
           label: string;
         };
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "parametres".
+ */
+export interface Parametre {
+  id: number;
+  institutionName: string;
+  /**
+   * Baseline courte affichée sous le logo.
+   */
+  tagline?: string | null;
+  contact?: {
+    address?: string | null;
+    phone?: string | null;
+    email?: string | null;
+    pressEmail?: string | null;
+    suppliersEmail?: string | null;
+  };
+  openingHours?:
+    | {
+        days: string;
+        hours: string;
+        id?: string | null;
+      }[]
+    | null;
+  social?:
+    | {
+        platform: 'linkedin' | 'twitter' | 'youtube' | 'facebook';
+        url: string;
+        id?: string | null;
+      }[]
+    | null;
+  footerDescription?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "accueil".
+ */
+export interface Accueil {
+  id: number;
+  hero: {
+    eyebrow?: string | null;
+    title: string;
+    description?: string | null;
+    backgroundImage?: (number | null) | Media;
+    primaryCta?: {
+      label?: string | null;
+      href?: string | null;
+    };
+    secondaryCta?: {
+      label?: string | null;
+      href?: string | null;
+    };
+  };
+  ceoMessage: {
+    name: string;
+    role: string;
+    portrait?: (number | null) | Media;
+    excerpt: string;
+    fullMessageHref?: string | null;
+  };
+  keyFigures?:
+    | {
+        label: string;
+        value: string;
+        unit?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  quickAccess?:
+    | {
+        title: string;
+        description: string;
+        href: string;
+        icon: 'FileText' | 'Briefcase' | 'Map' | 'Shield' | 'Users' | 'Mail';
         id?: string | null;
       }[]
     | null;
@@ -1737,6 +2497,96 @@ export interface FooterSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "parametres_select".
+ */
+export interface ParametresSelect<T extends boolean = true> {
+  institutionName?: T;
+  tagline?: T;
+  contact?:
+    | T
+    | {
+        address?: T;
+        phone?: T;
+        email?: T;
+        pressEmail?: T;
+        suppliersEmail?: T;
+      };
+  openingHours?:
+    | T
+    | {
+        days?: T;
+        hours?: T;
+        id?: T;
+      };
+  social?:
+    | T
+    | {
+        platform?: T;
+        url?: T;
+        id?: T;
+      };
+  footerDescription?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "accueil_select".
+ */
+export interface AccueilSelect<T extends boolean = true> {
+  hero?:
+    | T
+    | {
+        eyebrow?: T;
+        title?: T;
+        description?: T;
+        backgroundImage?: T;
+        primaryCta?:
+          | T
+          | {
+              label?: T;
+              href?: T;
+            };
+        secondaryCta?:
+          | T
+          | {
+              label?: T;
+              href?: T;
+            };
+      };
+  ceoMessage?:
+    | T
+    | {
+        name?: T;
+        role?: T;
+        portrait?: T;
+        excerpt?: T;
+        fullMessageHref?: T;
+      };
+  keyFigures?:
+    | T
+    | {
+        label?: T;
+        value?: T;
+        unit?: T;
+        id?: T;
+      };
+  quickAccess?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        href?: T;
+        icon?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "collections_widget".
  */
 export interface CollectionsWidget {
@@ -1756,14 +2606,14 @@ export interface TaskSchedulePublish {
     doc?:
       | ({
           relationTo: 'pages';
-          value: string | Page;
+          value: number | Page;
         } | null)
       | ({
           relationTo: 'posts';
-          value: string | Post;
+          value: number | Post;
         } | null);
     global?: string | null;
-    user?: (string | null) | User;
+    user?: (number | null) | User;
   };
   output?: unknown;
 }
