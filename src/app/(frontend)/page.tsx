@@ -16,12 +16,10 @@ import { SectionHeading } from '@/components/institutional/SectionHeading'
 import { QuickAccessCards } from '@/components/institutional/QuickAccessCards'
 import { CTABanner } from '@/components/institutional/CTABanner'
 import { CEOMessage } from '@/components/institutional/CEOMessage'
-import { SimplifiedMap, type MapSite } from '@/components/institutional/SimplifiedMap'
 import { LatestNews, type NewsItem } from '@/components/institutional/LatestNews'
 import {
   getAccueil,
   getActualites,
-  getInfrastructures,
 } from '@/utilities/institutional'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -51,15 +49,6 @@ export const metadata: Metadata = {
 }
 
 // Fallbacks statiques — utilisés tant que le CMS Payload n'est pas peuplé.
-const FALLBACK_MAP_SITES: MapSite[] = [
-  { id: 's1', name: 'Terminal de Matadi', type: 'installation', lat: -5.824, lng: 13.461, description: 'Hub logistique — Kongo-Central' },
-  { id: 's2', name: 'Dépôt de Kinshasa', type: 'stockage', lat: -4.325, lng: 15.322, description: 'Capacité 320 000 m³' },
-  { id: 's3', name: 'Pipeline Kivu', type: 'pipeline', lat: -1.678, lng: 29.222, description: 'Axe stratégique — Est RDC' },
-  { id: 's4', name: 'Station de Lubumbashi', type: 'stockage', lat: -11.664, lng: 27.479, description: 'Réserve — Haut-Katanga' },
-  { id: 's5', name: 'Corridor Kongo-Central', type: 'pipeline', lat: -5.28, lng: 14.2, description: 'Transport primaire — ouest' },
-  { id: 's6', name: 'Terminal portuaire de Boma', type: 'installation', lat: -5.843, lng: 13.053, description: 'Terminal maritime' },
-]
-
 const FALLBACK_QUICK_ACCESS = [
   {
     icon: FileText,
@@ -143,10 +132,9 @@ const FALLBACK_LATEST_NEWS: NewsItem[] = [
  * Fallbacks statiques si le CMS est vide.
  */
 export default async function HomePage() {
-  const [accueilRaw, actualitesRaw, infrastructuresRaw] = await Promise.all([
+  const [accueilRaw, actualitesRaw] = await Promise.all([
     getAccueil() as Promise<Any>,
     getActualites({ limit: 3 }) as Promise<Any[]>,
-    getInfrastructures() as Promise<Any[]>,
   ])
 
   const accueil = accueilRaw ?? {}
@@ -175,21 +163,6 @@ export default async function HomePage() {
       }))
     : FALLBACK_LATEST_NEWS
 
-  // --- Infrastructures (CMS → carte) ---
-  // NOTE: la collection Payload `Infrastructures` doit exposer `coordinates.lat`
-  // et `coordinates.lng` (WGS84). Le schéma legacy `x/y` est ignoré ici.
-  const mapSites: MapSite[] = infrastructuresRaw.length
-    ? (infrastructuresRaw
-        .filter((i: Any) => i.coordinates?.lat !== undefined && i.coordinates?.lng !== undefined)
-        .map((i: Any) => ({
-          id: String(i.id),
-          name: i.name,
-          type: i.type as 'pipeline' | 'stockage' | 'installation',
-          lat: Number(i.coordinates.lat),
-          lng: Number(i.coordinates.lng),
-          description: i.description ?? undefined,
-        })) as MapSite[])
-    : FALLBACK_MAP_SITES
 
   // --- Quick access (CMS → cartes) ---
   const quickAccessItems = quickAccess.length
@@ -299,8 +272,6 @@ export default async function HomePage() {
           />
         </div>
       </section>
-
-      <SimplifiedMap sites={mapSites} />
 
       <LatestNews items={newsItems} />
 

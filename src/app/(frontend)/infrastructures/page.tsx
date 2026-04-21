@@ -5,7 +5,6 @@ import { GitBranch, Warehouse, Factory, Gauge, Truck, Anchor } from 'lucide-reac
 import { PageHero } from '@/components/institutional/PageHero'
 import { SectionHeading } from '@/components/institutional/SectionHeading'
 import { StatBlock } from '@/components/institutional/StatBlock'
-import { SimplifiedMap, type MapSite } from '@/components/institutional/SimplifiedMap'
 import { CTABanner } from '@/components/institutional/CTABanner'
 
 export const metadata: Metadata = {
@@ -13,20 +12,6 @@ export const metadata: Metadata = {
   description:
     'Réseau de transport pétrolier, sites de stockage stratégiques, terminaux et installations critiques de l’aval pétrolier congolais.',
 }
-
-// Données provisoires — seront remplacées par la collection Payload `Infrastructures`.
-const MAP_SITES: MapSite[] = [
-  { id: 'n1', name: 'Terminal de Matadi', type: 'installation', lat: -5.824, lng: 13.461, description: 'Hub logistique principal — Kongo-Central' },
-  { id: 'n2', name: 'Dépôt de Kinshasa', type: 'stockage', lat: -4.325, lng: 15.322, description: 'Capacité 320 000 m³' },
-  { id: 'n3', name: 'Pipeline Kivu', type: 'pipeline', lat: -1.678, lng: 29.222, description: 'Axe stratégique — 820 km' },
-  { id: 'n4', name: 'Station de Lubumbashi', type: 'stockage', lat: -11.664, lng: 27.479, description: 'Réserve — Haut-Katanga' },
-  { id: 'n5', name: 'Corridor Kongo-Central', type: 'pipeline', lat: -5.28, lng: 14.2, description: 'Transport primaire — 640 km' },
-  { id: 'n6', name: 'Terminal de Boma', type: 'installation', lat: -5.843, lng: 13.053, description: 'Terminal maritime' },
-  { id: 'n7', name: 'Dépôt du Kasaï', type: 'stockage', lat: -6.135, lng: 23.589, description: 'Capacité 180 000 m³ — Mbuji-Mayi' },
-  { id: 'n8', name: 'Pipeline de l’Équateur', type: 'pipeline', lat: 0.044, lng: 18.266, description: 'Interconnexion nord — Mbandaka' },
-  { id: 'n9', name: 'Centre National de Supervision', type: 'installation', lat: 0.515, lng: 25.191, description: 'Centre de contrôle — Kisangani' },
-  { id: 'n10', name: 'Dépôt de Matadi', type: 'stockage', lat: -5.82, lng: 13.48, description: 'Capacité 210 000 m³' },
-]
 
 const CATEGORIES = [
   {
@@ -195,18 +180,6 @@ export default function InfrastructuresPage() {
           </section>
         )
       })}
-
-      {/* Carte complète */}
-      <section id="carte">
-        <div className="container py-16 md:py-20">
-          <SectionHeading
-            eyebrow="Carte interactive"
-            title="Cartographie complète du réseau"
-            description="Explorez l’ensemble des sites référencés, filtrez par type d’infrastructure et consultez les informations clés de chaque installation."
-          />
-        </div>
-        <SimplifiedMap sites={MAP_SITES} />
-      </section>
 
       <CTABanner
         eyebrow="Projets"
