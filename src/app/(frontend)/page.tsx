@@ -10,7 +10,7 @@ import {
   type LucideIcon,
 } from 'lucide-react'
 
-import { InstitutionalHero } from '@/components/institutional/InstitutionalHero'
+import { InstitutionalHeroSlider, type HeroSlide } from '@/components/institutional/InstitutionalHeroSlider'
 import { StatBlock } from '@/components/institutional/StatBlock'
 import { SectionHeading } from '@/components/institutional/SectionHeading'
 import { QuickAccessCards } from '@/components/institutional/QuickAccessCards'
@@ -201,32 +201,67 @@ export default async function HomePage() {
       }))
     : FALLBACK_QUICK_ACCESS
 
+  // --- Hero slides : slide n°1 piloté par le CMS, les suivants sont institutionnels par défaut ---
+  const heroBgDefault = mediaUrl(hero.backgroundImage) ?? '/hero-accueil.jpeg'
+  const cmsSlides: Any[] = Array.isArray(hero.slides) ? hero.slides : []
+
+  const heroSlides: HeroSlide[] = cmsSlides.length
+    ? cmsSlides.map((s) => ({
+        eyebrow: s.eyebrow ?? undefined,
+        title: s.title ?? '',
+        description: s.description ?? undefined,
+        primaryCta:
+          s.primaryCta?.label && s.primaryCta?.href
+            ? { label: s.primaryCta.label, href: s.primaryCta.href }
+            : undefined,
+        secondaryCta:
+          s.secondaryCta?.label && s.secondaryCta?.href
+            ? { label: s.secondaryCta.label, href: s.secondaryCta.href }
+            : undefined,
+        backgroundImage: mediaUrl(s.backgroundImage) ?? heroBgDefault,
+      }))
+    : [
+        {
+          eyebrow: hero.eyebrow ?? 'Institution publique',
+          title:
+            hero.title ??
+            'Au service de la sécurité et de la souveraineté énergétiques de la RDC',
+          description:
+            hero.description ??
+            'L’ENGIP-RDC — Entreprise Nationale de Gestion des Infrastructures Pétrolières — conduit la logistique pétrolière nationale : conception, exploitation, maintenance et développement des installations stratégiques sur l’ensemble du territoire.',
+          primaryCta:
+            hero.primaryCta?.label && hero.primaryCta?.href
+              ? { label: hero.primaryCta.label, href: hero.primaryCta.href }
+              : { label: 'Découvrir l’institution', href: '/institution' },
+          secondaryCta:
+            hero.secondaryCta?.label && hero.secondaryCta?.href
+              ? { label: hero.secondaryCta.label, href: hero.secondaryCta.href }
+              : { label: 'Nos infrastructures', href: '/infrastructures' },
+          backgroundImage: heroBgDefault,
+        },
+        {
+          eyebrow: 'Infrastructures stratégiques',
+          title: 'Un réseau national au service de la souveraineté énergétique',
+          description:
+            'Pipelines, terminaux portuaires et sites de stockage : l’ENGIP-RDC opère et modernise les infrastructures critiques qui garantissent l’approvisionnement du territoire.',
+          primaryCta: { label: 'Explorer la carte', href: '/infrastructures' },
+          secondaryCta: { label: 'Nos projets', href: '/projets' },
+          backgroundImage: heroBgDefault,
+        },
+        {
+          eyebrow: 'Transparence & service public',
+          title: 'Publications officielles, appels d’offres et reporting institutionnel',
+          description:
+            'Accédez à nos rapports, communiqués, données ouvertes et procédures d’appels d’offres — un accès direct à l’action publique de l’institution.',
+          primaryCta: { label: 'Consulter les publications', href: '/publications' },
+          secondaryCta: { label: 'Voir les appels d’offres', href: '/appels-offres' },
+          backgroundImage: heroBgDefault,
+        },
+      ]
+
   return (
     <main>
-      <InstitutionalHero
-        eyebrow={hero.eyebrow ?? 'Institution publique'}
-        title={
-          hero.title ??
-          'Au service de la sécurité et de la souveraineté énergétiques de la RDC'
-        }
-        description={
-          hero.description ??
-          'L’ENGIP-RDC — Entreprise Nationale de Gestion des Infrastructures Pétrolières — conduit la logistique pétrolière nationale : conception, exploitation, maintenance et développement des installations stratégiques sur l’ensemble du territoire.'
-        }
-        primaryCta={
-          hero.primaryCta?.label && hero.primaryCta?.href
-            ? { label: hero.primaryCta.label, href: hero.primaryCta.href }
-            : { label: 'Découvrir l’institution', href: '/institution' }
-        }
-        secondaryCta={
-          hero.secondaryCta?.label && hero.secondaryCta?.href
-            ? { label: hero.secondaryCta.label, href: hero.secondaryCta.href }
-            : { label: 'Nos infrastructures', href: '/infrastructures' }
-        }
-        backgroundImage={
-          mediaUrl(hero.backgroundImage) ?? '/hero-accueil.jpeg'
-        }
-      />
+      <InstitutionalHeroSlider slides={heroSlides} />
 
       <CEOMessage
         name={ceo.name ?? 'Prénom NOM'}
