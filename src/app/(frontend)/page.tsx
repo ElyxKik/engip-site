@@ -225,10 +225,10 @@ export default async function HomePage() {
           eyebrow: hero.eyebrow ?? 'Institution publique',
           title:
             hero.title ??
-            'Au service de la sécurité et de la souveraineté énergétiques de la RDC',
+            'Au service de la sécurité et de la souveraineté énergétiques',
           description:
             hero.description ??
-            'L’ENGIP-RDC — Entreprise Nationale de Gestion des Infrastructures Pétrolières — conduit la logistique pétrolière nationale : conception, exploitation, maintenance et développement des installations stratégiques sur l’ensemble du territoire.',
+            'L’ENGIP conduit la conception, exploitation, maintenance et développement des installations stratégiques sur l’ensemble du territoire.',
           primaryCta:
             hero.primaryCta?.label && hero.primaryCta?.href
               ? { label: hero.primaryCta.label, href: hero.primaryCta.href }
